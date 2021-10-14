@@ -1,0 +1,11 @@
+---
+- name: name
+  hosts: csr1kv
+  gather_facts: false
+  connection: local
+
+  tasks:
+  - name: hola
+    ios_command:
+      commands: show interface brief
+    

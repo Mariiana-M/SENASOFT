@@ -1,0 +1,3 @@
+csr1kv ansible_user=cisco ansible_password=cisco123! ansible_host=192.168.100.157
+#M1 ansible_user=cisco ansible_password=cisco123! ansible_host=192.168.100.133
+#ansible-all -i 192.168.100.0 -c network_cli -u admin -k -n ios_facts -e ansible_network_os=ios

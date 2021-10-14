@@ -1,0 +1,45 @@
+---
+- name: TESTING COMMANDS
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  tasks: 
+  - name: VPN
+    ios_config:
+      lines:
+        - access-list 110 permit ip 192.168.100.0 0.0.0.255 192.168.100.1 0.0.0.255
+
+  - name: key
+    ios_config:
+      parents: crypto isakmp policy 10
+      lines:
+        - encryption aes
+        - authentication pre-share
+        - group 2
+        - exit
+  - name: cisco
+    ios_config:
+      lines:
+        - crypto isakmp key cisco address 10.2.2.2
+        - crypto ipsec transform-set VPN-SET esp-3des esp-sha-hmac
+  - name: map VPN
+    ios_config:
+      parents: crypto map VPN-MAP 10 ipsec-isakmp
+      lines:
+        - description VPN connection to R#
+        - set peer 10.2.2.2
+        - set transform-set VPN-SET
+        - match addres 110
+        - exit
+  - name: int
+    ios_config:
+      parents: interface s0/0/0
+      lines:
+        - crypto map VP-MAP
+  - name: show crypto ipsec
+    ios_command:
+      commands: show crypto ipsec sa
+    register: show_inf
+
+
